@@ -241,24 +241,35 @@ Access the admin dashboard at `/admin`. Features include:
 
 ## Deployment
 
-### Vercel (Recommended)
+Ready to deploy? See our comprehensive **[Deployment Guide](./DEPLOYMENT.md)** for step-by-step instructions.
 
-1. Push code to GitHub
-2. Import project in Vercel
-3. Add environment variables
-4. Deploy
+### Quick Deploy to Vercel (Recommended)
 
-### Other Platforms
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone)
 
-1. Build the project:
-```bash
-npm run build
-```
+**Quick Steps:**
+1. Push your code to GitHub
+2. Sign up for [Vercel](https://vercel.com)
+3. Import your GitHub repository
+4. Add environment variables (see [DEPLOYMENT.md](./DEPLOYMENT.md))
+5. Click Deploy!
 
-2. Start production server:
-```bash
-npm start
-```
+**What you'll need:**
+- ✅ Supabase project (database + storage)
+- ✅ Google OAuth credentials
+- ✅ Stripe account
+- ✅ All environment variables ready
+
+### Pre-Deployment Checklist
+
+Use the **[Production Checklist](./PRODUCTION_CHECKLIST.md)** to ensure everything is configured correctly before going live.
+
+### Deployment Resources
+
+- 📖 [Complete Deployment Guide](./DEPLOYMENT.md)
+- ✅ [Production Checklist](./PRODUCTION_CHECKLIST.md)
+- 🔧 [Supabase Setup Guide](./SUPABASE_SETUP.md)
+- ⚡ [Quick Setup](./SETUP.md)
 
 ## File Storage with Supabase
 
