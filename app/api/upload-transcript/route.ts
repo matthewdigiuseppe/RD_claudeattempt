@@ -2,8 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { writeFile, mkdir } from 'fs/promises'
-import { join } from 'path'
+import { getSupabaseAdmin, STORAGE_BUCKET } from '@/lib/supabase'
 import Stripe from 'stripe'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_dummy', {
@@ -51,26 +50,27 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Convert file to buffer
-    const bytes = await file.arrayBuffer()
-    const buffer = Buffer.from(bytes)
-
-    // Create uploads directory if it doesn't exist
-    const uploadsDir = join(process.cwd(), 'uploads')
-    try {
-      await mkdir(uploadsDir, { recursive: true })
-    } catch (error) {
-      // Directory might already exist
-    }
-
-    // Generate unique filename
+    // Upload to Supabase Storage
+    const supabaseAdmin = getSupabaseAdmin()
     const timestamp = Date.now()
     const sanitizedUniversity = metadata.university.replace(/[^a-z0-9]/gi, '_')
-    const filename = `${session.user.id}_${timestamp}_${sanitizedUniversity}.pdf`
-    const filepath = join(uploadsDir, filename)
+    const fileName = `${session.user.id}_${timestamp}_${sanitizedUniversity}.pdf`
+    const filePath = `${session.user.id}/${fileName}`
 
-    // Save file
-    await writeFile(filepath, buffer)
+    const { error: uploadError } = await supabaseAdmin.storage
+      .from(STORAGE_BUCKET)
+      .upload(filePath, file, {
+        contentType: 'application/pdf',
+        upsert: false
+      })
+
+    if (uploadError) {
+      console.error('Error uploading to Supabase:', uploadError)
+      return NextResponse.json(
+        { error: 'Failed to upload file to storage' },
+        { status: 500 }
+      )
+    }
 
     // Get user from database
     const user = await prisma.user.findUnique({
@@ -98,7 +98,7 @@ export async function POST(req: NextRequest) {
         userId: user.id,
         university: metadata.university,
         graduationYear: parseInt(metadata.graduationYear),
-        transcriptFilePath: filepath,
+        transcriptFilePath: filePath,
         paymentId: stripeSession.payment_intent as string,
         paymentStatus: 'completed',
       },

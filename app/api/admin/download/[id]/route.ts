@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { readFile } from 'fs/promises'
+import { downloadTranscript } from '@/lib/supabase'
 
 export async function GET(
   req: NextRequest,
@@ -34,9 +34,23 @@ export async function GET(
       )
     }
 
-    const fileBuffer = await readFile(submission.transcriptFilePath)
+    // Download from Supabase Storage
+    const { data: fileBlob, error: downloadError } = await downloadTranscript(
+      submission.transcriptFilePath
+    )
 
-    return new NextResponse(fileBuffer, {
+    if (downloadError || !fileBlob) {
+      console.error('Error downloading from Supabase:', downloadError)
+      return NextResponse.json(
+        { error: 'Failed to download transcript' },
+        { status: 500 }
+      )
+    }
+
+    // Convert Blob to ArrayBuffer
+    const arrayBuffer = await fileBlob.arrayBuffer()
+
+    return new NextResponse(arrayBuffer, {
       headers: {
         'Content-Type': 'application/pdf',
         'Content-Disposition': `attachment; filename="transcript_${id}.pdf"`,

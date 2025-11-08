@@ -1,39 +1,82 @@
 # Quick Setup Guide
 
-## Initial Setup (5 minutes)
+## Initial Setup (10 minutes)
 
 ### 1. Install Dependencies
 ```bash
 npm install
 ```
 
-### 2. Set Up Environment Variables
+### 2. Set Up Supabase (Required)
+
+**Why Supabase?** We use Supabase for both database and file storage - it's free, fast, and production-ready!
+
+1. Go to [https://supabase.com](https://supabase.com) and create account
+2. Click "New Project"
+3. Fill in:
+   - Name: `transcript-verification`
+   - Database Password: Generate strong password (save this!)
+   - Region: Choose closest to you
+4. Wait 2-3 minutes for setup
+
+**Create Storage Bucket:**
+1. Go to **Storage** in left menu
+2. Click "Create a new bucket"
+3. Name: `transcripts`
+4. Make it **Private**
+5. Click "Create bucket"
+
+**Get Your Credentials:**
+1. Go to **Settings** > **API**
+2. Copy:
+   - Project URL
+   - anon public key
+   - service_role key (keep secret!)
+3. Go to **Settings** > **Database** > **Connection string**
+4. Copy the URI connection string
+
+For detailed instructions, see [SUPABASE_SETUP.md](./SUPABASE_SETUP.md)
+
+### 3. Set Up Environment Variables
 
 Copy the example file:
 ```bash
 cp .env.example .env
 ```
 
-Edit `.env` with minimum required variables for local development:
+Edit `.env` with your Supabase credentials:
 ```env
-DATABASE_URL="postgresql://postgres:password@localhost:5432/transcript_platform"
+# Supabase Database
+DATABASE_URL="postgresql://postgres:[PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres?pgbouncer=true&connection_limit=1"
+DIRECT_URL="postgresql://postgres:[PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres"
+
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL="https://[PROJECT-REF].supabase.co"
+NEXT_PUBLIC_SUPABASE_ANON_KEY="your-anon-key"
+SUPABASE_SERVICE_ROLE_KEY="your-service-role-key"
+
+# NextAuth
 NEXTAUTH_URL="http://localhost:3000"
 NEXTAUTH_SECRET="your-secret-here-generate-with-openssl-rand-base64-32"
+
+# Google OAuth
 GOOGLE_CLIENT_ID="get-from-google-cloud-console"
 GOOGLE_CLIENT_SECRET="get-from-google-cloud-console"
+
+# Stripe
 STRIPE_SECRET_KEY="sk_test_get-from-stripe"
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="pk_test_get-from-stripe"
 ```
 
-### 3. Set Up Database
+### 4. Set Up Database Schema
 
-Ensure PostgreSQL is running, then:
+Run Prisma migrations to create tables in Supabase:
 ```bash
 npx prisma generate
 npx prisma db push
 ```
 
-### 4. Run Development Server
+### 5. Run Development Server
 ```bash
 npm run dev
 ```

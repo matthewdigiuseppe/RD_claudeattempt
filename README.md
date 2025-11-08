@@ -13,17 +13,17 @@ A web application that allows college graduates to verify the integrity of their
 
 ## Tech Stack
 
-- **Frontend**: Next.js 14 with App Router, React 19, TypeScript
+- **Frontend**: Next.js 16 with App Router, React 19, TypeScript
 - **Styling**: Tailwind CSS
 - **Authentication**: NextAuth.js with Google & Apple OAuth
-- **Database**: PostgreSQL with Prisma ORM
+- **Database**: Supabase (PostgreSQL) with Prisma ORM
+- **Storage**: Supabase Storage for secure file uploads
 - **Payment**: Stripe
-- **File Storage**: Local filesystem (configurable for AWS S3)
 
 ## Prerequisites
 
 - Node.js 18.x or higher
-- PostgreSQL database
+- Supabase account (free tier works great!)
 - Google OAuth credentials
 - Apple OAuth credentials (optional)
 - Stripe account
@@ -80,28 +80,45 @@ cd RD_claudeattempt
 npm install
 ```
 
-3. Set up environment variables:
+3. Set up Supabase:
 ```bash
-cp .env.example .env
-# Edit .env with your actual values
+# Follow the detailed guide in SUPABASE_SETUP.md
+# Quick version:
+# 1. Create a Supabase project at https://supabase.com
+# 2. Create a 'transcripts' storage bucket (private)
+# 3. Copy your credentials
 ```
 
-4. Set up the database:
+4. Set up environment variables:
+```bash
+cp .env.example .env
+# Edit .env with your Supabase credentials and other values
+```
+
+5. Set up the database:
 ```bash
 npx prisma generate
 npx prisma db push
 ```
 
-5. Run the development server:
+6. Run the development server:
 ```bash
 npm run dev
 ```
 
-6. Open [http://localhost:3000](http://localhost:3000) in your browser
+7. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-## Database Setup
+## Supabase Setup
 
-The application uses PostgreSQL with Prisma ORM. The schema includes:
+The application uses **Supabase** for both database and file storage. For detailed setup instructions, see [SUPABASE_SETUP.md](./SUPABASE_SETUP.md).
+
+### Quick Setup:
+1. Create a Supabase project
+2. Create a `transcripts` storage bucket (private)
+3. Set up storage policies
+4. Copy your credentials to `.env`
+
+The database schema includes:
 
 - **Users**: Store authenticated users
 - **Accounts**: NextAuth account linking
@@ -243,13 +260,32 @@ npm run build
 npm start
 ```
 
-## File Storage
+## File Storage with Supabase
 
-Currently uses local filesystem storage in `/uploads` directory. For production:
+The application uses **Supabase Storage** for secure, scalable file storage:
 
-1. Consider using AWS S3, Google Cloud Storage, or similar
-2. Update upload API endpoints to use cloud storage
-3. Configure appropriate permissions and access controls
+✅ **Benefits:**
+- **Secure**: Private buckets with Row Level Security
+- **Scalable**: No need to manage file systems
+- **Fast**: Global CDN for fast file delivery
+- **Cost-effective**: Generous free tier (1GB storage)
+- **Integrated**: Same infrastructure as your database
+
+**Storage Structure:**
+```
+transcripts/
+  └── {userId}/
+      ├── {userId}_{timestamp}_{university}.pdf
+      └── ...
+```
+
+**Security:**
+- All transcripts stored in private bucket
+- Access controlled via service role key
+- Files only accessible through authenticated API routes
+- Automatic encryption at rest
+
+For setup instructions, see [SUPABASE_SETUP.md](./SUPABASE_SETUP.md)
 
 ## Security Considerations
 
