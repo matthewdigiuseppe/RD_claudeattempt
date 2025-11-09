@@ -7,7 +7,7 @@ import { Suspense } from 'react'
 
 function SignInForm() {
   const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get('callbackUrl') || '/upload'
+  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard'
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50 flex items-center justify-center px-4">
