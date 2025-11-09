@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { createClient } from '@/lib/supabase/server'
 import { prisma } from '@/lib/prisma'
 import { getSupabaseAdmin, STORAGE_BUCKET } from '@/lib/supabase'
 import Stripe from 'stripe'
@@ -11,9 +10,10 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_dummy', {
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
 
-    if (!session?.user?.email) {
+    if (!user?.email) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
@@ -54,8 +54,8 @@ export async function POST(req: NextRequest) {
     const supabaseAdmin = getSupabaseAdmin()
     const timestamp = Date.now()
     const sanitizedUniversity = metadata.university.replace(/[^a-z0-9]/gi, '_')
-    const fileName = `${session.user.id}_${timestamp}_${sanitizedUniversity}.pdf`
-    const filePath = `${session.user.id}/${fileName}`
+    const fileName = `${user.id}_${timestamp}_${sanitizedUniversity}.pdf`
+    const filePath = `${user.id}/${fileName}`
 
     const { error: uploadError } = await supabaseAdmin.storage
       .from(STORAGE_BUCKET)
@@ -73,11 +73,11 @@ export async function POST(req: NextRequest) {
     }
 
     // Get user from database
-    const user = await prisma.user.findUnique({
-      where: { email: session.user.email },
+    const dbUser = await prisma.user.findUnique({
+      where: { email: user.email },
     })
 
-    if (!user) {
+    if (!dbUser) {
       return NextResponse.json(
         { error: 'User not found' },
         { status: 404 }
@@ -85,9 +85,9 @@ export async function POST(req: NextRequest) {
     }
 
     // Update user's full name if provided
-    if (metadata.fullName && metadata.fullName !== user.fullName) {
+    if (metadata.fullName && metadata.fullName !== dbUser.fullName) {
       await prisma.user.update({
-        where: { id: user.id },
+        where: { id: dbUser.id },
         data: { fullName: metadata.fullName },
       })
     }
@@ -95,7 +95,7 @@ export async function POST(req: NextRequest) {
     // Create submission record
     const submission = await prisma.submission.create({
       data: {
-        userId: user.id,
+        userId: dbUser.id,
         university: metadata.university,
         graduationYear: parseInt(metadata.graduationYear),
         transcriptFilePath: filePath,

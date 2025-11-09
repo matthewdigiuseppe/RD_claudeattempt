@@ -1,12 +1,15 @@
 'use client'
 
-import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
+import { createClient } from '@/lib/supabase/client'
+import type { User } from '@supabase/supabase-js'
 
 export default function UploadPage() {
-  const { data: session, status } = useSession()
   const router = useRouter()
+  const supabase = createClient()
+  const [user, setUser] = useState<User | null>(null)
+  const [loading, setLoading] = useState(true)
   const [step, setStep] = useState(1)
   const [formData, setFormData] = useState({
     fullName: '',
@@ -15,23 +18,29 @@ export default function UploadPage() {
     graduationYear: new Date().getFullYear(),
   })
   const [file, setFile] = useState<File | null>(null)
-  const [loading, setLoading] = useState(false)
+  const [paymentLoading, setPaymentLoading] = useState(false)
   const [error, setError] = useState('')
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/auth/signin?callbackUrl=/upload')
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) {
+        router.push('/auth/signin?callbackUrl=/upload')
+      } else {
+        setUser(user)
+        setFormData(prev => ({
+          ...prev,
+          email: user.email || '',
+          fullName: user.user_metadata?.full_name || '',
+        }))
+      }
+      setLoading(false)
     }
-    if (session?.user) {
-      setFormData(prev => ({
-        ...prev,
-        email: session.user?.email || '',
-        fullName: session.user?.name || '',
-      }))
-    }
-  }, [session, status, router])
 
-  if (status === 'loading') {
+    getUser()
+  }, [router, supabase.auth])
+
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -67,7 +76,7 @@ export default function UploadPage() {
   }
 
   const handlePayment = async () => {
-    setLoading(true)
+    setPaymentLoading(true)
     setError('')
 
     try {
@@ -96,7 +105,7 @@ export default function UploadPage() {
     } catch (err) {
       setError('Failed to initiate payment. Please try again.')
     } finally {
-      setLoading(false)
+      setPaymentLoading(false)
     }
   }
 
@@ -218,10 +227,10 @@ export default function UploadPage() {
         </button>
         <button
           onClick={handlePayment}
-          disabled={loading}
+          disabled={paymentLoading}
           className="flex-1 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50"
         >
-          {loading ? 'Processing...' : 'Pay $29.99'}
+          {paymentLoading ? 'Processing...' : 'Pay $29.99'}
         </button>
       </div>
 

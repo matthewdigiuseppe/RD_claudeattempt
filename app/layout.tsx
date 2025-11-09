@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import './globals.css'
-import { Providers } from '@/components/Providers'
 import Script from 'next/script'
 
 export const metadata: Metadata = {
@@ -23,7 +22,7 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans antialiased">
-        <Providers>{children}</Providers>
+        {children}
       </body>
     </html>
   )
