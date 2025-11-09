@@ -6,6 +6,18 @@ const config: Config = {
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  safelist: [
+    'bg-gradient-to-br',
+    'from-blue-600',
+    'via-blue-700',
+    'to-blue-800',
+    'from-blue-500',
+    'to-blue-600',
+    'from-blue-50',
+    'to-blue-100',
+    'from-gray-900',
+    'to-gray-800',
+  ],
   theme: {
     extend: {
       colors: {
