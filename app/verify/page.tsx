@@ -39,16 +39,16 @@ export default function VerifyPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50">
       {/* Navigation */}
-      <nav className="border-b bg-white">
+      <nav className="border-b bg-white/95 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <Link href="/" className="text-xl font-bold">
-              <span className="text-gray-900">REAL</span>
+            <Link href="/" className="text-xl font-bold tracking-tight">
+              <span className="text-indigo-600">REAL</span>
               <span className="text-gray-900 font-normal lowercase">degrees</span>
             </Link>
-            <Link href="/" className="text-gray-600 hover:text-gray-900 font-medium">
+            <Link href="/" className="text-gray-600 hover:text-indigo-600 font-medium transition text-sm">
               Back to Home
             </Link>
           </div>
@@ -68,10 +68,10 @@ export default function VerifyPage() {
           </div>
 
           {/* Verification Form */}
-          <div className="bg-white rounded border border-gray-200 shadow-lg p-8 mb-8">
+          <div className="bg-white rounded-2xl border border-gray-200 shadow-xl p-8 mb-8">
             <form onSubmit={handleVerify} className="space-y-6">
               <div>
-                <label htmlFor="verification-code" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="verification-code" className="block text-sm font-semibold text-gray-900 mb-2">
                   Verification Code
                 </label>
                 <input
@@ -81,15 +81,15 @@ export default function VerifyPage() {
                   onChange={(e) => setVerificationCode(e.target.value)}
                   placeholder="Enter verification code"
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-gray-900 focus:border-transparent text-lg"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent text-lg"
                 />
-                <p className="mt-2 text-sm text-gray-500">
+                <p className="mt-2 text-sm text-gray-600">
                   The verification code can be found on the candidate's report or by scanning their QR code
                 </p>
               </div>
 
               {error && (
-                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
                   {error}
                 </div>
               )}
@@ -97,7 +97,7 @@ export default function VerifyPage() {
               <button
                 type="submit"
                 disabled={loading || !verificationCode}
-                className="w-full bg-gray-900 text-white py-3 rounded font-semibold hover:bg-gray-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-indigo-600 text-white py-4 rounded-lg font-semibold hover:bg-indigo-700 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
               >
                 {loading ? 'Verifying...' : 'Verify Report'}
               </button>
@@ -106,10 +106,10 @@ export default function VerifyPage() {
 
           {/* Verification Result */}
           {result && (
-            <div className="bg-white rounded border border-gray-200 shadow-lg p-8">
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-xl p-8">
               <div className="flex items-center mb-6">
-                <div className="w-12 h-12 bg-green-100 rounded flex items-center justify-center mr-4">
-                  <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center mr-4">
+                  <svg className="w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
@@ -163,7 +163,7 @@ export default function VerifyPage() {
               </div>
 
               {result.analysisStatus === 'pending' && (
-                <div className="mt-6 bg-yellow-50 border border-yellow-200 rounded p-4">
+                <div className="mt-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                   <p className="text-sm text-yellow-800">
                     <strong>Note:</strong> The analysis for this transcript is still in progress.
                     The full report will be available once the analysis is completed.
@@ -171,8 +171,8 @@ export default function VerifyPage() {
                 </div>
               )}
 
-              <div className="mt-6 bg-gray-50 border border-gray-200 rounded p-4">
-                <p className="text-sm text-gray-700">
+              <div className="mt-6 bg-indigo-50 border border-indigo-200 rounded-lg p-4">
+                <p className="text-sm text-indigo-900">
                   This report has been verified as authentic. The verification code matches our records and
                   confirms that this transcript analysis was conducted by REALdegrees.
                 </p>
@@ -181,26 +181,26 @@ export default function VerifyPage() {
           )}
 
           {/* Information Section */}
-          <div className="mt-8 bg-white rounded border border-gray-200 p-6">
-            <h3 className="font-semibold text-gray-900 mb-3">For Employers</h3>
-            <ul className="space-y-2 text-sm text-gray-600">
+          <div className="mt-8 bg-white rounded-2xl border border-gray-200 shadow-lg p-8">
+            <h3 className="font-bold text-xl text-gray-900 mb-6">For Employers</h3>
+            <ul className="space-y-4 text-gray-700">
               <li className="flex items-start">
-                <svg className="w-5 h-5 text-gray-900 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-5 h-5 text-indigo-600 mr-3 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                Each verification code is unique and tied to a specific student's transcript analysis
+                <span>Each verification code is unique and tied to a specific student's transcript analysis</span>
               </li>
               <li className="flex items-start">
-                <svg className="w-5 h-5 text-gray-900 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-5 h-5 text-indigo-600 mr-3 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                Reports analyze the AI-resistance of assessment methods used in the student's courses
+                <span>Reports analyze the AI-resistance of assessment methods used in the student's courses</span>
               </li>
               <li className="flex items-start">
-                <svg className="w-5 h-5 text-gray-900 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-5 h-5 text-indigo-600 mr-3 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                Verified reports provide third-party assurance of academic integrity
+                <span>Verified reports provide third-party assurance of academic integrity</span>
               </li>
             </ul>
           </div>
