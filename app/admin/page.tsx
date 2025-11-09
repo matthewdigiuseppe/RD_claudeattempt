@@ -1,8 +1,9 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useSession, signOut } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
+import type { User } from '@supabase/supabase-js'
 
 interface Submission {
   id: string
@@ -20,16 +21,27 @@ interface Submission {
 }
 
 export default function AdminDashboard() {
-  const { data: session, status } = useSession()
   const router = useRouter()
+  const supabase = createClient()
+  const [user, setUser] = useState<User | null>(null)
   const [submissions, setSubmissions] = useState<Submission[]>([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState('all')
   const [searchTerm, setSearchTerm] = useState('')
 
   useEffect(() => {
-    fetchSubmissions()
-  }, [])
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) {
+        router.push('/auth/signin')
+      } else {
+        setUser(user)
+        fetchSubmissions()
+      }
+    }
+
+    getUser()
+  }, [router, supabase.auth])
 
   const fetchSubmissions = async () => {
     try {
@@ -40,9 +52,13 @@ export default function AdminDashboard() {
       }
     } catch (error) {
       console.error('Error fetching submissions:', error)
-    } finally {
-      setLoading(false)
     }
+    setLoading(false)
+  }
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut()
+    router.push('/')
   }
 
   const handleDownload = async (submissionId: string) => {
@@ -116,7 +132,7 @@ export default function AdminDashboard() {
           <div className="flex justify-between items-center">
             <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
             <button
-              onClick={() => signOut()}
+              onClick={handleSignOut}
               className="text-sm text-gray-600 hover:text-gray-900"
             >
               Sign Out

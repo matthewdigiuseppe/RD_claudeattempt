@@ -2,13 +2,13 @@
 
 import { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useSession } from 'next-auth/react'
+import { createClient } from '@/lib/supabase/client'
 
 function UploadSuccessContent() {
-  const { data: session } = useSession()
   const router = useRouter()
   const searchParams = useSearchParams()
   const sessionId = searchParams.get('session_id')
+  const supabase = createClient()
 
   const [file, setFile] = useState<File | null>(null)
   const [uploading, setUploading] = useState(false)
