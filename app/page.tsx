@@ -1,5 +1,6 @@
 import Link from 'next/link'
 
+// Force rebuild to clear Vercel build cache
 export default function Home() {
   return (
     <div className="min-h-screen bg-white">
