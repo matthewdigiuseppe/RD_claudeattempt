@@ -96,14 +96,14 @@ function UploadSuccessContent() {
   if (success) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white flex items-center justify-center px-4">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl border border-blue-100 p-12 text-center">
+          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Upload Successful!</h2>
-          <p className="text-gray-600">Redirecting...</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Upload Successful</h2>
+          <p className="text-gray-600">Redirecting to confirmation...</p>
         </div>
       </div>
     )
@@ -113,19 +113,19 @@ function UploadSuccessContent() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white py-12 px-4">
       <div className="max-w-2xl mx-auto">
         {/* Success Badge */}
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="text-center mb-12">
+          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Payment Successful!</h1>
-          <p className="text-gray-600">Now upload your official transcript to complete your submission</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-3">Payment Confirmed</h1>
+          <p className="text-gray-600">Complete your submission by uploading your official transcript</p>
         </div>
 
         {/* Upload Card */}
-        <div className="bg-white rounded-2xl shadow-xl p-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Upload Your Transcript</h2>
+        <div className="bg-white rounded-2xl shadow-xl border border-blue-100 p-10">
+          <h2 className="text-xl font-semibold text-gray-900 mb-6">Upload Official Transcript</h2>
 
           {/* Drag and Drop Area */}
           <div
@@ -133,8 +133,8 @@ function UploadSuccessContent() {
             onDragLeave={handleDrag}
             onDragOver={handleDrag}
             onDrop={handleDrop}
-            className={`border-2 border-dashed rounded-lg p-12 text-center transition ${
-              dragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300'
+            className={`border-2 border-dashed rounded-xl p-12 text-center transition ${
+              dragActive ? 'border-blue-600 bg-blue-50' : 'border-gray-300'
             }`}
           >
             {file ? (
@@ -150,7 +150,7 @@ function UploadSuccessContent() {
                 </div>
                 <button
                   onClick={() => setFile(null)}
-                  className="text-sm text-blue-600 hover:text-blue-700"
+                  className="text-sm text-blue-600 hover:text-blue-700 font-medium"
                 >
                   Choose different file
                 </button>
@@ -164,7 +164,7 @@ function UploadSuccessContent() {
                 </div>
                 <div>
                   <label htmlFor="file-upload" className="cursor-pointer">
-                    <span className="text-blue-600 hover:text-blue-700 font-medium">
+                    <span className="text-blue-600 hover:text-blue-700 font-semibold">
                       Click to upload
                     </span>
                     <span className="text-gray-600"> or drag and drop</span>
@@ -183,7 +183,7 @@ function UploadSuccessContent() {
           </div>
 
           {error && (
-            <div className="mt-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+            <div className="mt-4 bg-red-50 border border-red-200 rounded-lg text-red-800 px-4 py-3 text-sm">
               {error}
             </div>
           )}
@@ -191,18 +191,30 @@ function UploadSuccessContent() {
           <button
             onClick={handleUpload}
             disabled={!file || uploading}
-            className="w-full mt-6 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full mt-6 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-600/20"
           >
             {uploading ? 'Uploading...' : 'Complete Submission'}
           </button>
 
-          <div className="mt-6 bg-gray-50 rounded-lg p-4 text-sm text-gray-600">
-            <p className="font-semibold mb-2">What happens next?</p>
-            <ul className="space-y-1 ml-4">
-              <li>• Your transcript will be securely stored and analyzed</li>
-              <li>• You'll receive an email confirmation of your submission</li>
-              <li>• Analysis typically takes 3-5 business days</li>
-              <li>• Your verification report will be sent to your email</li>
+          <div className="mt-8 bg-blue-50 rounded-xl border border-blue-100 p-6 text-sm text-gray-600">
+            <p className="font-semibold text-gray-900 mb-3">What happens next?</p>
+            <ul className="space-y-2">
+              <li className="flex items-start">
+                <span className="text-blue-600 mr-2">•</span>
+                <span>Your transcript will be securely stored and analyzed</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-blue-600 mr-2">•</span>
+                <span>You'll receive email confirmation of your submission</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-blue-600 mr-2">•</span>
+                <span>Analysis typically takes 3-5 business days</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-blue-600 mr-2">•</span>
+                <span>Your verification report will be sent to your email</span>
+              </li>
             </ul>
           </div>
         </div>
@@ -216,8 +228,8 @@ export default function UploadSuccess() {
     <Suspense fallback={
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading...</p>
+          <div className="animate-spin rounded-full h-10 w-10 border-2 border-blue-200 border-t-blue-600 mx-auto"></div>
+          <p className="mt-4 text-sm text-gray-600">Loading...</p>
         </div>
       </div>
     }>
