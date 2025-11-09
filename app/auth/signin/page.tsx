@@ -1,15 +1,13 @@
 'use client'
 
-import { signIn } from 'next-auth/react'
-import { useSearchParams } from 'next/navigation'
-import Link from 'next/link'
-import { Suspense, useState } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { createClient } from '@/lib/supabase/client'
 
-function SignInForm() {
-  const searchParams = useSearchParams()
+export default function SignIn() {
   const router = useRouter()
-  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard'
+  const supabase = createClient()
 
   const [mode, setMode] = useState<'signin' | 'signup'>('signin')
   const [email, setEmail] = useState('')
@@ -18,25 +16,42 @@ function SignInForm() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const handleCredentialsSignIn = async (e: React.FormEvent) => {
+  const handleGoogleSignIn = async () => {
+    setError('')
+    setLoading(true)
+
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
+      },
+    })
+
+    if (error) {
+      setError(error.message)
+      setLoading(false)
+    }
+  }
+
+  const handleEmailSignIn = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
     setLoading(true)
 
     try {
-      const result = await signIn('credentials', {
+      const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
-        redirect: false,
       })
 
-      if (result?.error) {
-        setError('Invalid email or password')
+      if (error) {
+        setError(error.message)
       } else {
-        router.push(callbackUrl)
+        router.push('/dashboard')
+        router.refresh()
       }
-    } catch (err) {
-      setError('An error occurred. Please try again.')
+    } catch (err: any) {
+      setError(err.message || 'An error occurred')
     } finally {
       setLoading(false)
     }
@@ -48,34 +63,31 @@ function SignInForm() {
     setLoading(true)
 
     try {
-      const response = await fetch('/api/auth/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, fullName }),
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        setError(data.error || 'Failed to create account')
-        setLoading(false)
-        return
-      }
-
-      // Auto sign in after signup
-      const result = await signIn('credentials', {
+      const { error } = await supabase.auth.signUp({
         email,
         password,
-        redirect: false,
+        options: {
+          data: {
+            full_name: fullName,
+          },
+        },
       })
 
-      if (result?.error) {
-        setError('Account created, but sign-in failed. Please try signing in manually.')
+      if (error) {
+        setError(error.message)
       } else {
-        router.push(callbackUrl)
+        // Supabase will send a confirmation email
+        setError('Check your email to confirm your account!')
+        setEmail('')
+        setPassword('')
+        setFullName('')
+        setTimeout(() => {
+          setMode('signin')
+          setError('')
+        }, 3000)
       }
-    } catch (err) {
-      setError('An error occurred. Please try again.')
+    } catch (err: any) {
+      setError(err.message || 'An error occurred')
     } finally {
       setLoading(false)
     }
@@ -141,15 +153,19 @@ function SignInForm() {
             </button>
           </div>
 
-          {/* Error Message */}
+          {/* Error/Success Message */}
           {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+            <div className={`mb-4 p-3 rounded-lg text-sm ${
+              error.includes('Check your email')
+                ? 'bg-green-50 border border-green-200 text-green-700'
+                : 'bg-red-50 border border-red-200 text-red-700'
+            }`}>
               {error}
             </div>
           )}
 
           {/* Email/Password Form */}
-          <form onSubmit={mode === 'signin' ? handleCredentialsSignIn : handleSignUp} className="space-y-4 mb-6">
+          <form onSubmit={mode === 'signin' ? handleEmailSignIn : handleSignUp} className="space-y-4 mb-6">
             {mode === 'signup' && (
               <div>
                 <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">
@@ -220,8 +236,9 @@ function SignInForm() {
           <div className="space-y-3">
             {/* Google Sign In */}
             <button
-              onClick={() => signIn('google', { callbackUrl })}
-              className="w-full flex items-center justify-center px-6 py-3 border-2 border-gray-200 rounded-lg bg-white hover:bg-gray-50 transition font-medium text-gray-900"
+              onClick={handleGoogleSignIn}
+              disabled={loading}
+              className="w-full flex items-center justify-center px-6 py-3 border-2 border-gray-200 rounded-lg bg-white hover:bg-gray-50 transition font-medium text-gray-900 disabled:opacity-50"
             >
               <svg className="w-4 h-4 mr-3" viewBox="0 0 24 24">
                 <path
@@ -242,17 +259,6 @@ function SignInForm() {
                 />
               </svg>
               <span className="text-gray-900">Google</span>
-            </button>
-
-            {/* Apple Sign In */}
-            <button
-              onClick={() => signIn('apple', { callbackUrl })}
-              className="w-full flex items-center justify-center px-6 py-3 bg-black hover:bg-gray-900 rounded-lg text-white transition font-medium"
-            >
-              <svg className="w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
-              </svg>
-              <span>Apple</span>
             </button>
           </div>
 
@@ -276,20 +282,5 @@ function SignInForm() {
         </div>
       </div>
     </div>
-  )
-}
-
-export default function SignIn() {
-  return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-10 w-10 border-2 border-indigo-200 border-t-indigo-600 mx-auto"></div>
-          <p className="mt-4 text-sm text-gray-600">Loading...</p>
-        </div>
-      </div>
-    }>
-      <SignInForm />
-    </Suspense>
   )
 }
