@@ -30,4 +30,20 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+
+  .bg-blue-gradient {
+    background: linear-gradient(to bottom right, #2563eb, #1d4ed8, #1e40af);
+  }
+
+  .bg-blue-gradient-light {
+    background: linear-gradient(to bottom right, #eff6ff, #ffffff);
+  }
+
+  .bg-blue-card-gradient {
+    background: linear-gradient(to bottom right, #3b82f6, #2563eb);
+  }
+
+  .bg-gray-gradient {
+    background: linear-gradient(to bottom right, #111827, #1f2937);
+  }
 }

@@ -36,7 +36,7 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 text-white py-32">
+      <section className="relative bg-blue-gradient text-white py-32">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMSkiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-20"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="text-center max-w-4xl mx-auto">
@@ -117,7 +117,7 @@ export default function Home() {
               }
             ].map((step, index) => (
               <div key={index} className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition group">
-                <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition">
+                <div className="w-14 h-14 bg-blue-card-gradient rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition">
                   <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={step.icon} />
                   </svg>
@@ -168,7 +168,7 @@ export default function Home() {
                 ))}
               </div>
             </div>
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-3xl p-10 shadow-xl">
+            <div className="bg-blue-gradient-light rounded-3xl p-10 shadow-xl">
               <h3 className="text-2xl font-bold text-gray-900 mb-6">Your Verification Report Includes</h3>
               <div className="space-y-5">
                 {[
@@ -196,7 +196,7 @@ export default function Home() {
       </section>
 
       {/* Employer CTA */}
-      <section className="py-24 bg-gradient-to-br from-gray-900 to-gray-800 text-white">
+      <section className="py-24 bg-gray-gradient text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl font-bold mb-4">Employer Verification Portal</h2>
           <p className="text-xl text-gray-300 mb-10 leading-relaxed">
