@@ -1,21 +1,38 @@
 'use client'
 
-import { useSession, signOut } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { createClient } from '@/lib/supabase/client'
+import type { User } from '@supabase/supabase-js'
 
 export default function Dashboard() {
-  const { data: session, status } = useSession()
   const router = useRouter()
+  const supabase = createClient()
+  const [user, setUser] = useState<User | null>(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/auth/signin')
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) {
+        router.push('/auth/signin')
+      } else {
+        setUser(user)
+      }
+      setLoading(false)
     }
-  }, [status, router])
 
-  if (status === 'loading') {
+    getUser()
+  }, [router, supabase.auth])
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut()
+    router.push('/')
+    router.refresh()
+  }
+
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-blue-50">
         <div className="text-center">
@@ -25,6 +42,10 @@ export default function Dashboard() {
       </div>
     )
   }
+
+  if (!user) return null
+
+  const displayName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'there'
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50">
@@ -40,10 +61,10 @@ export default function Dashboard() {
             </Link>
             <div className="flex items-center space-x-4">
               <div className="text-sm text-gray-600">
-                {session?.user?.email}
+                {user.email}
               </div>
               <button
-                onClick={() => signOut({ callbackUrl: '/' })}
+                onClick={handleSignOut}
                 className="text-sm text-gray-600 hover:text-gray-900 font-medium"
               >
                 Sign Out
@@ -58,7 +79,7 @@ export default function Dashboard() {
         {/* Welcome Section */}
         <div className="mb-12">
           <h2 className="text-4xl font-bold text-gray-900 mb-2">
-            Welcome back, {session?.user?.name?.split(' ')[0] || 'there'}!
+            Welcome back, {displayName}!
           </h2>
           <p className="text-xl text-gray-600">
             Ready to verify your AI-proof degree? Let's get started.
