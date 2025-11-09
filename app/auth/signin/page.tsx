@@ -10,11 +10,11 @@ function SignInForm() {
   const callbackUrl = searchParams.get('callbackUrl') || '/upload'
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
       <div className="max-w-md w-full">
         {/* Back to Home */}
         <div className="mb-8">
-          <Link href="/" className="text-blue-600 hover:text-blue-700 flex items-center text-sm font-medium">
+          <Link href="/" className="text-gray-700 hover:text-gray-900 flex items-center text-sm font-medium">
             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
@@ -23,10 +23,10 @@ function SignInForm() {
         </div>
 
         {/* Sign In Card */}
-        <div className="bg-white rounded-2xl shadow-xl border border-blue-100 p-10">
+        <div className="bg-white rounded border border-gray-200 shadow-lg p-10">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-3">Sign In</h1>
-            <p className="text-gray-600">Access your credential verification dashboard</p>
+            <p className="text-gray-600">Access your verification dashboard</p>
           </div>
 
           <div className="space-y-3">
@@ -80,10 +80,10 @@ function SignInForm() {
         {/* Security Badge */}
         <div className="mt-8 text-center">
           <div className="inline-flex items-center text-sm text-gray-600">
-            <svg className="w-4 h-4 mr-2 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+            <svg className="w-4 h-4 mr-2 text-gray-900" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
             </svg>
-            Bank-level encryption
+            Secure & encrypted
           </div>
         </div>
       </div>
@@ -94,9 +94,9 @@ function SignInForm() {
 export default function SignIn() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-10 w-10 border-2 border-blue-200 border-t-blue-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-10 w-10 border-2 border-gray-200 border-t-gray-900 mx-auto"></div>
           <p className="mt-4 text-sm text-gray-600">Loading...</p>
         </div>
       </div>

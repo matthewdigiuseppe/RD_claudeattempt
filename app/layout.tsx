@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { Providers } from '@/components/Providers'
+import Script from 'next/script'
 
 export const metadata: Metadata = {
-  title: 'Transcript Verification Platform',
-  description: 'Verify the integrity of your degree in the age of AI',
+  title: 'REALdegrees - Verify Your AI-Proof Degree',
+  description: 'Providing human solutions for the AI crisis in education. Verify your AI-resistant credentials and stand out to employers.',
 }
 
 export default function RootLayout({
@@ -14,6 +15,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body className="font-sans antialiased">
         <Providers>{children}</Providers>
       </body>
