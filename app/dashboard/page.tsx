@@ -19,12 +19,14 @@ export default function Dashboard() {
         router.push('/auth/signin')
       } else {
         setUser(user)
+        // Sync user to Prisma database
+        fetch('/api/sync-user', { method: 'POST' }).catch(console.error)
       }
       setLoading(false)
     }
 
     getUser()
-  }, [router, supabase.auth])
+  }, [])
 
   const handleSignOut = async () => {
     await supabase.auth.signOut()

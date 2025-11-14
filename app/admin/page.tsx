@@ -41,7 +41,7 @@ export default function AdminDashboard() {
     }
 
     getUser()
-  }, [router, supabase.auth])
+  }, [])
 
   const fetchSubmissions = async () => {
     try {

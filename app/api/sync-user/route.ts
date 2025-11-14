@@ -1,32 +1,19 @@
+import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url)
-  const code = searchParams.get('code')
-  const next = searchParams.get('next') ?? '/dashboard'
-
-  if (code) {
-    const supabase = await createClient()
-    const { error } = await supabase.auth.exchangeCodeForSession(code)
-    if (!error) {
-      // Sync user to Prisma database
-      const { data: { user } } = await supabase.auth.getUser()
-      if (user?.email) {
-        await syncUserToPrisma(user)
-      }
-
-      return NextResponse.redirect(`${origin}${next}`)
-    }
-  }
-
-  // return the user to an error page with instructions
-  return NextResponse.redirect(`${origin}/auth/auth-code-error`)
-}
-
-async function syncUserToPrisma(user: any) {
+export async function POST(req: NextRequest) {
   try {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+
+    if (!user?.email) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
+    }
+
     // Check if user exists in Prisma
     const existingUser = await prisma.user.findUnique({
       where: { email: user.email },
@@ -46,7 +33,13 @@ async function syncUserToPrisma(user: any) {
         },
       })
     }
+
+    return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Error syncing user to Prisma:', error)
+    console.error('Error syncing user:', error)
+    return NextResponse.json(
+      { error: 'Failed to sync user' },
+      { status: 500 }
+    )
   }
 }

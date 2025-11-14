@@ -38,7 +38,7 @@ export default function UploadPage() {
     }
 
     getUser()
-  }, [router, supabase.auth])
+  }, [])
 
   if (loading) {
     return (
