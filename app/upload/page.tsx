@@ -75,6 +75,13 @@ export default function UploadPage() {
     }
   }
 
+  const handleTestMode = () => {
+    // Store form data in sessionStorage for test mode
+    sessionStorage.setItem('testFormData', JSON.stringify(formData))
+    // Redirect to upload success page with test mode flag
+    router.push('/upload/success?session_id=test_mode')
+  }
+
   const handlePayment = async () => {
     setPaymentLoading(true)
     setError('')
@@ -237,6 +244,19 @@ export default function UploadPage() {
       <p className="text-xs text-gray-500 text-center">
         Secure payment processing by Stripe
       </p>
+
+      {/* Test Mode Button */}
+      <div className="mt-4 pt-4 border-t border-gray-200">
+        <button
+          onClick={handleTestMode}
+          className="w-full bg-gray-100 text-gray-700 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition"
+        >
+          🧪 Test Mode - Skip Payment
+        </button>
+        <p className="text-xs text-gray-500 text-center mt-2">
+          For testing purposes only - bypasses Stripe payment
+        </p>
+      </div>
     </div>
   )
 

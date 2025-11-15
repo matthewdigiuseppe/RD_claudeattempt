@@ -69,11 +69,23 @@ function UploadSuccessContent() {
     setError('')
 
     try {
+      const isTestMode = sessionId === 'test_mode'
       const formData = new FormData()
       formData.append('file', file)
-      formData.append('sessionId', sessionId)
 
-      const response = await fetch('/api/upload-transcript', {
+      if (isTestMode) {
+        // Test mode - use stored form data
+        const storedFormData = sessionStorage.getItem('testFormData')
+        if (storedFormData) {
+          formData.append('formData', storedFormData)
+        }
+      } else {
+        // Real mode - use Stripe session ID
+        formData.append('sessionId', sessionId)
+      }
+
+      const endpoint = isTestMode ? '/api/test-upload' : '/api/upload-transcript'
+      const response = await fetch(endpoint, {
         method: 'POST',
         body: formData,
       })
@@ -119,8 +131,20 @@ function UploadSuccessContent() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-3">Payment Confirmed</h1>
-          <p className="text-gray-600">Complete your submission by uploading your official transcript</p>
+          {sessionId === 'test_mode' ? (
+            <>
+              <div className="inline-block bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium mb-3">
+                🧪 Test Mode
+              </div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-3">Ready to Upload</h1>
+              <p className="text-gray-600">Upload your transcript for testing (no payment required)</p>
+            </>
+          ) : (
+            <>
+              <h1 className="text-3xl font-bold text-gray-900 mb-3">Payment Confirmed</h1>
+              <p className="text-gray-600">Complete your submission by uploading your official transcript</p>
+            </>
+          )}
         </div>
 
         {/* Upload Card */}
