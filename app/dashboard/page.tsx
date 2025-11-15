@@ -89,7 +89,7 @@ export default function Dashboard() {
         </div>
 
         {/* Action Cards */}
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid md:grid-cols-3 gap-8">
           {/* Upload Transcript Card */}
           <Link
             href="/upload"
@@ -113,6 +113,35 @@ export default function Dashboard() {
             </p>
             <div className="mt-6 inline-flex items-center text-indigo-600 font-semibold">
               Get Started
+              <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          </Link>
+
+          {/* My Submissions Card */}
+          <Link
+            href="/submissions"
+            className="group bg-white rounded-2xl border-2 border-gray-200 hover:border-indigo-300 shadow-lg hover:shadow-xl transition-all duration-300 p-8"
+          >
+            <div className="flex items-start justify-between mb-4">
+              <div className="w-14 h-14 bg-indigo-100 rounded-xl flex items-center justify-center group-hover:bg-indigo-200 transition">
+                <svg className="w-7 h-7 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+              </div>
+              <svg className="w-6 h-6 text-gray-400 group-hover:text-indigo-600 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-indigo-600 transition">
+              My Submissions
+            </h3>
+            <p className="text-gray-600 leading-relaxed">
+              View your submitted transcripts and download completed verification reports.
+            </p>
+            <div className="mt-6 inline-flex items-center text-indigo-600 font-semibold">
+              View Submissions
               <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
